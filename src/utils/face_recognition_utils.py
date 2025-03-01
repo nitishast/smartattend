@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-import face_recognition
+import utils.face_recognition_utils as face_recognition_utils
 import pickle
 from datetime import datetime
 import logging
@@ -81,17 +81,17 @@ class FaceRecognitionSystem:
         for image_path in image_paths:
             try:
                 # Load image
-                image = face_recognition.load_image_file(image_path)
+                image = face_recognition_utils.load_image_file(image_path)
                 
                 # Detect faces
-                face_locations = face_recognition.face_locations(image, model=self.detection_method)
+                face_locations = face_recognition_utils.face_locations(image, model=self.detection_method)
                 
                 if len(face_locations) != 1:
                     logger.warning(f"Expected 1 face, found {len(face_locations)} in {image_path}")
                     continue
                 
                 # Get face encodings
-                face_encoding = face_recognition.face_encodings(image, face_locations)[0]
+                face_encoding = face_recognition_utils.face_encodings(image, face_locations)[0]
                 encodings.append(face_encoding)
                 
                 # Add to known faces
@@ -126,16 +126,16 @@ class FaceRecognitionSystem:
         """
         if isinstance(image, str):
             # Load image from path
-            image = face_recognition.load_image_file(image)
+            image = face_recognition_utils.load_image_file(image)
         
         # Detect faces
-        face_locations = face_recognition.face_locations(image, model=self.detection_method)
+        face_locations = face_recognition_utils.face_locations(image, model=self.detection_method)
         
         if not face_locations:
             return []
         
         # Get face encodings
-        face_encodings = face_recognition.face_encodings(image, face_locations)
+        face_encodings = face_recognition_utils.face_encodings(image, face_locations)
         
         results = []
         for i, face_encoding in enumerate(face_encodings):
@@ -149,7 +149,7 @@ class FaceRecognitionSystem:
                 continue
                 
             # Calculate face distances (lower is better match)
-            face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
+            face_distances = face_recognition_utils.face_distance(self.known_face_encodings, face_encoding)
             
             # Get best match
             best_match_index = np.argmin(face_distances)
