@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Camera{% endblock %}
+
+{% block content %}
+<h2>Add Camera</h2>
+
+<form method="POST" action="{{ url_for('cameras.add_camera') }}">
+    <div class="form-group">
+        <label for="camera_id">Camera ID</label>
+        <input type="number" class="form-control" id="camera_id" name="camera_id" value="0" required>
+    </div>
+    <div class="form-group">
+        <label for="name">Camera Name (Location)</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="resolution">Resolution (e.g., 640x480)</label>
+        <input type="text" class="form-control" id="resolution" name="resolution" value="640x480">
+    </div>
+    <div class="form-group">
+        <label for="fps">Frames Per Second (FPS)</label>
+        <input type="number" class="form-control" id="fps" name="fps" value="30">
+    </div>
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="auto_start" name="auto_start" checked>
+        <label class="form-check-label" for="auto_start">Auto Start</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Camera</button>
+</form>
+{% endblock %}

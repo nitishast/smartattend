@@ -173,7 +173,7 @@ def get_token():
     })
 
 # Initialize admin user if none exists
-@auth_bp.before_app_first_request
+@auth_bp.before_app_request
 def create_admin_user():
     if User.query.count() == 0:
         admin_user = User(

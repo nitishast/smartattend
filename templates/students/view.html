@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}View Student{% endblock %}
+
+{% block content %}
+<h2>Student Details</h2>
+
+<p><strong>ID:</strong> {{ student.id }}</p>
+<p><strong>Student ID:</strong> {{ student.student_id }}</p>
+<p><strong>First Name:</strong> {{ student.first_name }}</p>
+<p><strong>Last Name:</strong> {{ student.last_name }}</p>
+<p><strong>Email:</strong> {{ student.email }}</p>
+<p><strong>Grade Level:</strong> {{ student.grade_level }}</p>
+<p><strong>Date of Birth:</strong> {{ student.date_of_birth.strftime('%Y-%m-%d') if student.date_of_birth else 'N/A' }}</p>
+<p><strong>Enrollment Date:</strong> {{ student.enrollment_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+
+<h3>Classes</h3>
+<ul>
+    {% for class in student.classes %}
+        <li>{{ class.class_name }} ({{ class.class_code }})</li>
+    {% else %}
+        <li>Not enrolled in any classes.</li>
+    {% endfor %}
+</ul>
+
+<h3>Face Embeddings</h3>
+{% if student.face_embeddings %}
+<ul>
+    {% for embedding in student.face_embeddings %}
+    <li>
+        Embedding ID: {{ embedding.id }} <br>
+        Created At: {{ embedding.created_at.strftime('%Y-%m-%d %H:%M:%S') }} <br>
+        {% if embedding.image_path %}
+        Image: <a href="{{ url_for('students.uploaded_file', filename=embedding.image_path.split('/')[-1]) }}" target="_blank">View Image</a> <br>
+         <img src="{{ url_for('students.uploaded_file', filename=embedding.image_path.split('/')[-1]) }}" alt="Face Image" style="max-width: 200px; max-height: 200px;">
+        {% else %}
+        No Image Available
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No face embeddings found for this student.</p>
+{% endif %}
+<a href="{{ url_for('students.edit', student_id=student.id) }}" class="btn btn-warning">Edit Student</a>
+{% if session.role == 'admin' %}
+<form action="{{ url_for('students.delete', student_id=student.id) }}" method="post" style="display: inline;">
+    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this student?')">Delete Student</button>
+</form>
+{% endif %}
+<a href="{{ url_for('students.enroll_face', student_id=student.id) }}" class="btn btn-primary">Enroll Face</a>
+
+{% endblock %}

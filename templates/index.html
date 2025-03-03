@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Welcome to the Smart Attendance System</h1>
+<p>This system uses AI-powered facial recognition to manage attendance and enhance campus security.</p>
+
+{% if session.logged_in %}
+    <p>You are logged in as <strong>{{ session.username }}</strong> ({{ session.role }}).</p>
+{% else %}
+    <p>Please <a href="{{ url_for('auth.login') }}">log in</a> to access the system.</p>
+{% endif %}
+{% endblock %}

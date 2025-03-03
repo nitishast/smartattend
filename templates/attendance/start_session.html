@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Start Attendance Session{% endblock %}
+
+{% block content %}
+<h2>Start Attendance Session</h2>
+
+<form method="POST" action="{{ url_for('attendance.start_session') }}">
+    <div class="form-group">
+        <label for="class_id">Select Class</label>
+        <select class="form-control" id="class_id" name="class_id" required>
+            <option value="">Select a Class</option>
+            {% for class_obj in classes %}
+            <option value="{{ class_obj.id }}">{{ class_obj.class_name }} ({{ class_obj.class_code }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Start Session</button>
+</form>
+{% endblock %}

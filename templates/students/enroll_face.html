@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Enroll Face{% endblock %}
+
+{% block content %}
+<h2>Enroll Face for {{ student.first_name }} {{ student.last_name }}</h2>
+
+<form method="POST" action="{{ url_for('students.enroll_face', student_id=student.id) }}" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="face_images">Upload Face Images (1-3 recommended)</label>
+        <input type="file" class="form-control-file" id="face_images" name="face_images" multiple required>
+        <small class="form-text text-muted">
+            Please upload clear images of the student's face.  Good lighting and different angles are helpful.
+        </small>
+    </div>
+    <button type="submit" class="btn btn-primary">Enroll Face</button>
+</form>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Security Logs{% endblock %}
+
+{% block content %}
+<h2>Security Logs</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Timestamp</th>
+            <th>Event Type</th>
+            <th>Location</th>
+            <th>Person</th>
+            <th>Confidence</th>
+            <th>Image</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+            <tr>
+                <td>{{ log.id }}</td>
+                <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ log.event_type }}</td>
+                <td>{{ log.location }}</td>
+                <td>
+                    {% if log.person %}
+                        {{ log.person.first_name }} {{ log.person.last_name }} ({{log.person.student_id}})
+                    {% else %}
+                        Unknown
+                    {% endif %}
+                </td>
+                <td>{{ log.confidence_score }}</td>
+                <td>
+                    {% if log.image_path %}
+                       <a href="{{ log.image_path }}" target="_blank">View Image</a>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                 <td>{{ log.notes }}</td>
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

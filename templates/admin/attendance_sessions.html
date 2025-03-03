@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance Sessions{% endblock %}
+
+{% block content %}
+    <h2>Attendance Sessions</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Class</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Status</th>
+            <th>Created By</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for session in sessions %}
+            <tr>
+              <td>{{ session.id }}</td>
+              <td>{{ session.class_obj.class_name }} ({{ session.class_obj.class_code }})</td>
+              <td>{{ session.date.strftime('%Y-%m-%d') }}</td>
+              <td>{{ session.start_time.strftime('%H:%M:%S') }}</td>
+              <td>{{ session.end_time.strftime('%H:%M:%S') if session.end_time else 'N/A' }}</td>
+              <td>
+                {% if session.is_active %}
+                  <span class="badge badge-success">Active</span>
+                {% else %}
+                  <span class="badge badge-secondary">Inactive</span>
+                {% endif %}
+              </td>
+                <td>{{ session.creator.username if session.creator else 'N/A' }}</td>
+
+              <td>
+                <a href="{{ url_for('admin.view_attendance_session', session_id=session.id) }}" class="btn btn-info btn-sm">View</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+{% endblock %}

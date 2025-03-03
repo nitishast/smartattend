@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 def create_app():
     """Create and configure the Flask application"""
     app = Flask(__name__, 
-                template_folder='../templates',
-                static_folder='../static')
+                template_folder='templates',
+                static_folder='static')
     
     # Load configuration
     app.config.from_mapping(

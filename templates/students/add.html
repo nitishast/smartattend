@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Add Student{% endblock %}
+
+{% block content %}
+<h2>Add Student</h2>
+
+<form method="POST" action="{{ url_for('students.add') }}" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="student_id">Student ID</label>
+        <input type="text" class="form-control" id="student_id" name="student_id" required>
+    </div>
+    <div class="form-group">
+        <label for="first_name">First Name</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" required>
+    </div>
+    <div class="form-group">
+        <label for="last_name">Last Name</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email">
+    </div>
+    <div class="form-group">
+        <label for="grade_level">Grade Level</label>
+        <input type="text" class="form-control" id="grade_level" name="grade_level">
+    </div>
+    <div class="form-group">
+        <label for="date_of_birth">Date of Birth</label>
+        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
+    </div>
+    <div class="form-group">
+        <label for="classes">Classes</label>
+        <select multiple class="form-control" id="classes" name="classes">
+            {% for class in classes %}
+                <option value="{{ class.id }}">{{ class.class_name }} ({{ class.class_code }})</option>
+            {% endfor %}
+        </select>
+    </div>
+     <div class="form-group">
+        <label for="face_images">Face Images (1-3 recommended)</label>
+        <input type="file" class="form-control-file" id="face_images" name="face_images" multiple>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Student</button>
+</form>
+{% endblock %}

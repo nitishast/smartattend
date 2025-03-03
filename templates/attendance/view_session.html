@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}View Attendance Session{% endblock %}
+
+{% block content %}
+<h2>Attendance Session Details</h2>
+
+<p><strong>Session ID:</strong> {{ session.id }}</p>
+<p><strong>Class:</strong> {{ session.class_obj.class_name }} ({{ session.class_obj.class_code }})</p>
+<p><strong>Date:</strong> {{ session.date.strftime('%Y-%m-%d') }}</p>
+<p><strong>Start Time:</strong> {{ session.start_time.strftime('%H:%M:%S') }}</p>
+<p><strong>End Time:</strong> {{ session.end_time.strftime('%H:%M:%S') if session.end_time else 'N/A' }}</p>
+<p><strong>Status:</strong>  {% if session.is_active %}
+                  <span class="badge badge-success">Active</span>
+                {% else %}
+                  <span class="badge badge-secondary">Inactive</span>
+                {% endif %}</p>
+<p><strong>Created By:</strong> {{ session.creator.username if session.creator else 'N/A' }}</p>
+
+<h3>Attendance Records</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Student</th>
+        <th>Check-in Time</th>
+        <th>Status</th>
+        <th>Confidence</th>
+        <th>Method</th>
+         <th>Notes</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for record in attendance_records %}
+    <tr>
+        <td>{{ record.id }}</td>
+        <td>{{ record.student.first_name }} {{ record.student.last_name }} ({{ record.student.student_id }})</td>
+        <td>{{ record.check_in_time.strftime('%Y-%m-%d %H:%M:%S') if record.check_in_time else 'N/A' }}</td>
+        <td>{{ record.status }}</td>
+        <td>{{ record.confidence_score }}</td>
+        <td>{{ record.verification_method }}</td>
+        <td>{{ record.notes }}</td>
+        <td>
+            <!-- Button to trigger the modal -->
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editAttendanceModal-{{ record.id }}">
+                Edit
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="editAttendanceModal-{{ record.id }}" tabindex="-1" role="dialog" aria-labelledby="editAttendanceModalLabel-{{ record.id }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editAttendanceModalLabel-{{ record.id }}">Edit Attendance Record</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{{ url_for('attendance.edit_attendance', attendance_id=record.id) }}">
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="present" {% if record.status == 'present' %}selected{% endif %}>Present</option>
+                                        <option value="absent" {% if record.status == 'absent' %}selected{% endif %}>Absent</option>
+                                        <option value="late" {% if record.status == 'late' %}selected{% endif %}>Late</option>
+                                        <option value="excused" {% if record.status == 'excused' %}selected{% endif %}>Excused</option>
+                                    </select>
+                                </div>
+                                 <div class="form-group">
+                                    <label for="notes">Notes</label>
+                                     <textarea class="form-control" id="notes" name="notes" rows="3">{{ record.notes }}</textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}System Status{% endblock %}
+
+{% block content %}
+<h2>System Status</h2>
+
+<h3>Cameras</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Last Frame Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for name, camera in cameras.items() %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>
+                {% if camera.is_active() %}
+                <span class="badge badge-success">Active</span>
+                {% else %}
+                <span class="badge badge-danger">Inactive</span>
+                {% endif %}
+            </td>
+             <td>{{ camera.last_frame_time|round(2) }}</td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Attendance Processor</h3>
+<p><strong>Status:</strong>
+    {% if processor_status.is_running %}
+    <span class="badge badge-success">Running</span>
+    {% else %}
+    <span class="badge badge-danger">Stopped</span>
+    {% endif %}
+</p>
+<p><strong>Processed Frames:</strong> {{ processor_status.stats.processed_frames }}</p>
+<p><strong>Recognized Faces:</strong> {{ processor_status.stats.recognized_faces }}</p>
+<p><strong>Unknown Faces:</strong> {{ processor_status.stats.unknown_faces }}</p>
+<p><strong>Attendance Records:</strong> {{ processor_status.stats.attendance_records }}</p>
+<p><strong>Security Logs:</strong> {{ processor_status.stats.security_logs }}</p>
+
+<h3>Face Recognition System</h3>
+<p><strong>Known Faces:</strong> {{ recognition_status.known_faces }}</p>
+<p><strong>Detection Method:</strong> {{ recognition_status.detection_method }}</p>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}My Attendance{% endblock %}
+
+{% block content %}
+<h2>My Attendance - {{ student.first_name }} {{ student.last_name }} ({{student.student_id}})</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Session ID</th>
+            <th>Class</th>
+            <th>Date</th>
+            <th>Check-in Time</th>
+            <th>Status</th>
+             <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in attendance_records %}
+            <tr>
+                <td>{{ record.session_id }}</td>
+                <td>{{ record.session.class_obj.class_name }} ({{ record.session.class_obj.class_code }})</td>
+                <td>{{ record.session.date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ record.check_in_time.strftime('%Y-%m-%d %H:%M:%S') if record.check_in_time else 'N/A' }}</td>
+                <td>{{ record.status }}</td>
+                <td>{{ record.notes }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

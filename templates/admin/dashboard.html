@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Students</h5>
+                <p class="card-text">{{ total_students }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <p class="card-text">{{ total_users }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Total Classes</h5>
+                <p class="card-text">{{ total_classes }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Active Sessions</h5>
+                <p class="card-text">{{ active_sessions }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Recent Attendance (Last 7 Days)</h5>
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Recent Security Logs</h5>
+                <ul class="list-group">
+                    {% for log in recent_security_logs %}
+                    <li class="list-group-item">
+                        {{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} - {{ log.event_type }} -
+                        {% if log.person %}
+                        {{ log.person.first_name }} {{ log.person.last_name }}
+                        {% else %}
+                        Unknown Person
+                        {% endif %}
+                        -  <a href="{{ log.image_path }}" target="_blank">View Image</a>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item">No recent security logs.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Attendance Chart
+    var ctx = document.getElementById('attendanceChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ attendance_labels | tojson }},
+            datasets: [{
+                label: 'Students Attended',
+                data: {{ attendance_data | tojson }},
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

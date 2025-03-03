@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Cameras{% endblock %}
+
+{% block content %}
+<h2>Cameras</h2>
+<a href="{{ url_for('cameras.add_camera') }}" class="btn btn-success mb-2">Add Camera</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Camera ID</th>
+        <th>Resolution</th>
+        <th>FPS</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for name, camera in cameras.items() %}
+    <tr>
+        <td>{{ name }}</td>
+        <td>{{ camera.camera_id }}</td>
+        <td>{{ camera.resolution[0] }}x{{ camera.resolution[1] }}</td>
+        <td>{{ camera.fps }}</td>
+        <td>
+            {% if camera.is_active() %}
+            <span class="badge badge-success">Active</span>
+            {% else %}
+            <span class="badge badge-danger">Inactive</span>
+            {% endif %}
+        </td>
+        <td>
+            <a href="{{ url_for('cameras.view_camera', name=name) }}" class="btn btn-info btn-sm">View</a>
+            {% if camera.is_active() %}
+            <form action="{{ url_for('cameras.stop_camera', name=name) }}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-warning btn-sm">Stop</button>
+            </form>
+            {% else %}
+             <form action="{{ url_for('cameras.start_camera', name=name) }}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-primary btn-sm">Start</button>
+            </form>
+            {% endif %}
+             {% if session.role == 'admin' %}
+            <form action="{{ url_for('cameras.remove_camera', name=name) }}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this camera?')">Remove</button>
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

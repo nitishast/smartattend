@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-import utils.face_recognition_utils as face_recognition_utils
+from . import face_recognition_utils as face_recognition_utils
 import pickle
 from datetime import datetime
 import logging
