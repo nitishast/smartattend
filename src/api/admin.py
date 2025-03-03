@@ -1,6 +1,6 @@
 # src/api/admin.py
 from flask import Blueprint, request, jsonify, render_template, redirect, url_for, flash, current_app
-from src.models.database import db, User, Student, Class, AttendanceSession, SecurityLog
+from src.models.database import db, User, Student, Class, AttendanceSession, SecurityLog ,Attendance
 from src.api.auth import login_required, role_required
 from sqlalchemy import func, distinct
 from datetime import datetime, timedelta
